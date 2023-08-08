@@ -23,7 +23,7 @@ Widget buildHomeUseCase(BuildContext context) {
   return BasketScope(
     child: HomeScreen(
       fruits: getFruits(context),
-      title: context.knobs.string(label: 'AppBar title'),
+      title: context.knobs.string(label: 'AppBar title', initialValue: 'Grocery App'),
     ),
   );
 }
