@@ -31,6 +31,10 @@ Widget buildSummaryUseCase(BuildContext context) {
       min: 0,
       max: 1000,
     ),
+    showDelivery: context.knobs.boolean(
+      label: 'Show delivery',
+      initialValue: true,
+    ),
   );
 }
 
@@ -40,11 +44,13 @@ class Summary extends StatelessWidget {
     required this.total,
     required this.delivery,
     required this.subTotal,
+    this.showDelivery = false,
   });
 
   final double total;
   final double delivery;
   final double subTotal;
+  final bool showDelivery;
 
   @override
   Widget build(BuildContext context) {
@@ -74,22 +80,24 @@ class Summary extends StatelessWidget {
         SizedBox(
           height: AppTheme.of(context).spacing.small,
         ),
-        Row(
-          children: [
-            Text(
-              AppLocalizations.of(context)!.basketDelivery,
-              style: AppTheme.of(context).typography.subheadingRegular16,
-            ),
-            Expanded(child: Container()),
-            Text(
-              '\$${delivery.toStringAsFixed(2)}',
-              style: AppTheme.of(context).typography.subheadingRegular16,
-            ),
-          ],
-        ),
-        SizedBox(
-          height: AppTheme.of(context).spacing.small,
-        ),
+        if (showDelivery)
+          Row(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.basketDelivery,
+                style: AppTheme.of(context).typography.subheadingRegular16,
+              ),
+              Expanded(child: Container()),
+              Text(
+                '\$${delivery.toStringAsFixed(2)}',
+                style: AppTheme.of(context).typography.subheadingRegular16,
+              ),
+            ],
+          ),
+        if (showDelivery)
+          SizedBox(
+            height: AppTheme.of(context).spacing.small,
+          ),
         Row(
           children: [
             Text(

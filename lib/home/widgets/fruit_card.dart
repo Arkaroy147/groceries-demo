@@ -6,6 +6,7 @@ import 'package:groceries_app/home/widgets/add_basket_button.dart';
 import 'package:groceries_app/models/fruit.dart';
 import 'package:groceries_app/theme/app_theme.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+import 'package:widgetbook/widgetbook.dart';
 
 @UseCase(
   name: 'Default',
@@ -19,6 +20,10 @@ Widget fuitCard(BuildContext context) {
     child: FruitCard(
       fruit: getMango(context),
       onFruitAdded: (_) {},
+      showPrice: context.knobs.boolean(
+        label: 'Show price',
+        initialValue: true,
+      ),
     ),
   );
 }
@@ -28,9 +33,11 @@ class FruitCard extends StatelessWidget {
     super.key,
     required this.fruit,
     required this.onFruitAdded,
+    this.showPrice = true,
   });
 
   final Fruit fruit;
+  final bool showPrice;
   final void Function(Fruit fruit) onFruitAdded;
 
   @override
@@ -88,10 +95,11 @@ class FruitCard extends StatelessWidget {
                             AppTheme.of(context).typography.headingSemibold20,
                       ),
                     ),
-                    Text(
-                      '\$${fruit.price}/${AppLocalizations.of(context)!.unit}',
-                      style: AppTheme.of(context).typography.bodyMedium16,
-                    ),
+                    if (showPrice)
+                      Text(
+                        '\$${fruit.price}/${AppLocalizations.of(context)!.unit}',
+                        style: AppTheme.of(context).typography.bodyMedium16,
+                      ),
                   ],
                 ),
                 SizedBox(

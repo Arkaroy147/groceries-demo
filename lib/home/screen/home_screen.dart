@@ -11,6 +11,7 @@ import 'package:groceries_app/home/widgets/fruit_card.dart';
 import 'package:groceries_app/models/fruit.dart';
 import 'package:groceries_app/theme/theme.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+import 'package:widgetbook/widgetbook.dart';
 
 @UseCase(
   name: 'Home',
@@ -22,6 +23,7 @@ Widget buildHomeUseCase(BuildContext context) {
   return BasketScope(
     child: HomeScreen(
       fruits: getFruits(context),
+      title: context.knobs.string(label: 'AppBar title'),
     ),
   );
 }
@@ -30,65 +32,69 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
     required this.fruits,
+    this.title = 'Grocery App',
   });
 
   final List<Fruit> fruits;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     final basketState = BasketState.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        core.AppBar(
-          title: 'Grocery App',
-          numberOfItemsInBasket: basketState.basketSummary.length,
-        ),
-        SizedBox(
-          height: AppTheme.of(context).spacing.large,
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppTheme.of(context).spacing.medium,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.fruitsHeadline,
-                  style: AppTheme.of(context).typography.displayRegular32,
-                ),
-                SizedBox(
-                  height: AppTheme.of(context).spacing.large,
-                ),
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      return AlignedGridView.count(
-                        padding: EdgeInsets.zero,
-                        crossAxisCount: max(1, constraints.maxWidth ~/ 300),
-                        mainAxisSpacing: AppTheme.of(context).spacing.medium,
-                        crossAxisSpacing: AppTheme.of(context).spacing.medium,
-                        itemCount: fruits.length,
-                        itemBuilder: (context, index) {
-                          return FruitCard(
-                            fruit: fruits[index],
-                            onFruitAdded: (fruit) =>
-                                BasketState.of(context).addFruit(fruit),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          core.AppBar(
+            title: title,
+            numberOfItemsInBasket: basketState.basketSummary.length,
           ),
-        )
-      ],
+          SizedBox(
+            height: AppTheme.of(context).spacing.large,
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppTheme.of(context).spacing.medium,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.fruitsHeadline,
+                    style: AppTheme.of(context).typography.displayRegular32,
+                  ),
+                  SizedBox(
+                    height: AppTheme.of(context).spacing.large,
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return AlignedGridView.count(
+                          padding: EdgeInsets.zero,
+                          crossAxisCount: max(1, constraints.maxWidth ~/ 300),
+                          mainAxisSpacing: AppTheme.of(context).spacing.medium,
+                          crossAxisSpacing: AppTheme.of(context).spacing.medium,
+                          itemCount: fruits.length,
+                          itemBuilder: (context, index) {
+                            return FruitCard(
+                              fruit: fruits[index],
+                              onFruitAdded: (fruit) =>
+                                  BasketState.of(context).addFruit(fruit),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
